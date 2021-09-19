@@ -20,7 +20,7 @@ var taskFormHandler = function(event) {
     alert("You need to fill out the task form!");
     return false;
   }
-
+  
   // reset form fields for next task to be entered
   document.querySelector("input[name='task-name']").value = "";
   document.querySelector("select[name='task-type']").selectedIndex = 0;
@@ -29,7 +29,7 @@ var taskFormHandler = function(event) {
   var isEdit = formEl.hasAttribute("data-task-id");
 
   if (isEdit) {
-    var taskId = formEl.getAttribute("data-task-id");
+   var taskId = formEl.getAttribute("data-task-id");
     completeEditTask(taskNameInput, taskTypeInput, taskId);
   } else {
     var taskDataObj = {
@@ -55,6 +55,8 @@ var createTaskEl = function(taskDataObj) {
   taskDataObj.id = taskIdCounter;
 
   tasks.push(taskDataObj);
+  
+  saveTasks();
 
   // create task actions (buttons and select) for task
   var taskActionsEl = createTaskActions(taskIdCounter);
@@ -63,8 +65,7 @@ var createTaskEl = function(taskDataObj) {
 
   // increase task counter for next unique id
   taskIdCounter++;
-  console.log(taskDataObj)
-  console.log(taskDataObj.status);
+
 };
 
 var createTaskActions = function(taskId) {
@@ -121,7 +122,7 @@ var completeEditTask = function(taskName, taskType, taskId) {
       tasks[i].type = taskType;
     }
   };
-
+saveTasks();
   alert("Task Updated!");
 
   // remove data attribute from form
@@ -146,7 +147,7 @@ var taskButtonHandler = function(event) {
 };
 
 var taskStatusChangeHandler = function(event) {
-  console.log(event.target.value);
+
 
   var taskId = event.target.getAttribute("data-task-id");
   var statusValue = event.target.value.toLowerCase();
@@ -170,7 +171,7 @@ for(var i = 0; i < tasks.length; i++) {
     console.log(tasks)
   }
 }
-
+saveTasks();
 };
 
 var editTask = function(taskId) {
@@ -214,7 +215,12 @@ var deleteTask = function(taskId) {
   }
   // reassign tasks array to be the same as updatedTaskArrgit
 tasks = updatedTaskArr;
+saveTasks();
 };
+
+var saveTasks = function () {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 // Create a new task
 formEl.addEventListener("submit", taskFormHandler);
@@ -224,4 +230,5 @@ pageContentEl.addEventListener("click", taskButtonHandler);
 
 // for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
 
